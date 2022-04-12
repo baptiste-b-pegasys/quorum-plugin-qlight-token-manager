@@ -4,11 +4,11 @@ package proto;
 
 option go_package = "./proto";
 option java_package = "com.quorum.plugin.proto";
-option java_outer_classname = "HelloWorld";
+option java_outer_classname = "QLightTokenManager";
 
 message PluginQLightTokenManager {
     message Request {
-        string server = 1;
+        string currentToken = 1;
     }
     message Response {
         string token = 1;

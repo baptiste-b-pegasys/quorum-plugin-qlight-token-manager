@@ -48,8 +48,8 @@ func main() {
 // 2. QLight token manager plugin interface
 // 3. GRPC Plugin from go-plugin
 type QlightTokenManagerPluginImpl struct {
-	proto.UnimplementedPluginQLightTokenRefresherServer
 	proto_common.UnimplementedPluginInitializerServer
+	proto.UnimplementedPluginQLightTokenRefresherServer
 	plugin.Plugin
 	cfg *config
 }
@@ -91,5 +91,6 @@ func (h *QlightTokenManagerPluginImpl) Init(_ context.Context, req *proto_common
 }
 
 func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *proto.PluginQLightTokenManager_Request) (*proto.PluginQLightTokenManager_Response, error) {
-	return &proto.PluginQLightTokenManager_Response{Token: fmt.Sprintf("Hello %s!", req.Server)}, nil
+	log.Printf("refresh token %s\n", req.GetCurrentToken())
+	return &proto.PluginQLightTokenManager_Response{Token: req.GetCurrentToken()}, nil
 }
