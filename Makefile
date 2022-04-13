@@ -15,7 +15,7 @@ default: clean build zip
 
 build: tools
 	@mkdir -p $(OUTPUT_DIR)
-	@LD_FLAGS=$(LD_FLAGS) go generate ./metadata
+	@LD_FLAGS=$(LD_FLAGS) go generate ./...
 	@gox \
 		-parallel=2 \
 		-os="$(XC_OS)" \
