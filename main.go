@@ -5,13 +5,17 @@ package main
 // go:generate protoc --proto_path=. --go_out=proto_common --go-grpc_out=. --go_opt=paths=source_relative init.proto
 // go:generate protoc --proto_path=. --go_out=proto --go-grpc_out=. --go_opt=paths=source_relative qlight-token-manager.proto
 import (
+	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"strings"
 	"time"
@@ -104,7 +108,9 @@ type JWT struct {
 }
 
 type OryResp struct {
-	AccessToken string `json:"access_token"`
+	AccessToken      string `json:"access_token"`
+	Error            string `json:"error,omitempty"`
+	ErrorDescription string `json:"error_description,omitempty"`
 }
 
 func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *proto.PluginQLightTokenManager_Request) (*proto.PluginQLightTokenManager_Response, error) {
@@ -130,15 +136,36 @@ func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *pr
 	log.Printf("expireAt=%v\n", jwt.ExpireAt)
 	expireAt := time.Unix(jwt.ExpireAt, 0)
 	log.Printf("expireAt=%v\n", expireAt)
-	client := &http.Client{}
-	reader := strings.NewReader("")
-	request, err := http.NewRequestWithContext(ctx, h.cfg.Method, h.cfg.URL, reader)
+	if time.Since(expireAt) < -time.Minute {
+		log.Println("return current token")
+		return &proto.PluginQLightTokenManager_Response{Token: req.GetCurrentToken()}, nil
+	}
+	transCfg := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates
+	}
+	client := &http.Client{Transport: transCfg}
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	for key, template := range h.cfg.Parameters {
+		fw, err := writer.CreateFormField(key)
+		if err != nil {
+			return nil, err
+		}
+		_, err = io.Copy(fw, strings.NewReader(strings.Replace(template, "${PSI}", req.Psi, -1)))
+		if err != nil {
+			return nil, err
+		}
+	}
+	err = writer.Close()
 	if err != nil {
 		return nil, err
 	}
-	for key, template := range h.cfg.Parameters {
-		request.PostForm.Add(key, strings.Replace(template, "${PSI}", req.Psi, -1))
+	request, err := http.NewRequestWithContext(ctx, h.cfg.Method, h.cfg.URL, bytes.NewReader(body.Bytes()))
+	if err != nil {
+		return nil, err
 	}
+	request.Header.Set("Content-Type", writer.FormDataContentType())
 	response, err := client.Do(request)
 	if err != nil {
 		return nil, err
@@ -148,10 +175,14 @@ func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *pr
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("ory response=%s\n", string(data))
 	oryResp := &OryResp{}
 	err = json.Unmarshal(data, oryResp)
 	if err != nil {
 		return nil, err
+	}
+	if len(oryResp.Error) > 0 {
+		return nil, fmt.Errorf("%s: %s", oryResp.Error, oryResp.ErrorDescription)
 	}
 	token = "bearer " + oryResp.AccessToken
 	return &proto.PluginQLightTokenManager_Response{Token: token}, nil
