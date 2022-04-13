@@ -6,10 +6,15 @@ package main
 // go:generate protoc --proto_path=. --go_out=proto --go-grpc_out=. --go_opt=paths=source_relative qlight-token-manager.proto
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
+	"strings"
+	"time"
 
 	"github.com/baptiste-b-pegasys/quorum-plugin-qlight-token-manager/proto"
 	"github.com/baptiste-b-pegasys/quorum-plugin-qlight-token-manager/proto_common"
@@ -68,12 +73,16 @@ func (h *QlightTokenManagerPluginImpl) GRPCClient(context.Context, *plugin.GRPCB
 }
 
 type config struct {
-	Server string
+	URL, Method string
+	Parameters  map[string]string
 }
 
 func (c *config) validate() error {
-	if c.Server == "" {
-		return fmt.Errorf("server must be provided")
+	if c.URL == "" {
+		return fmt.Errorf("url must be provided")
+	}
+	if c.Method == "" {
+		return fmt.Errorf("method must be provided")
 	}
 	return nil
 }
@@ -90,7 +99,64 @@ func (h *QlightTokenManagerPluginImpl) Init(_ context.Context, req *proto_common
 	return &proto_common.PluginInitialization_Response{}, nil
 }
 
+type JWT struct {
+	ExpireAt int64 `json:"exp"`
+}
+
+type OryResp struct {
+	AccessToken string `json:"access_token"`
+}
+
 func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *proto.PluginQLightTokenManager_Request) (*proto.PluginQLightTokenManager_Response, error) {
 	log.Printf("refresh token %s\n", req.GetCurrentToken())
-	return &proto.PluginQLightTokenManager_Response{Token: req.GetCurrentToken()}, nil
+	token := req.GetCurrentToken()
+	idx := strings.Index(token, " ")
+	if idx >= 0 {
+		token = token[idx+1:]
+	}
+	log.Printf("token=%s\n", token)
+	split := strings.Split(token, ".")
+	log.Printf("split=%v\n", split)
+	data, err := base64.RawStdEncoding.DecodeString(split[1])
+	if err != nil {
+		return nil, err
+	}
+	log.Printf("json=%s\n", string(data))
+	jwt := &JWT{}
+	err = json.Unmarshal(data, jwt)
+	if err != nil {
+		return nil, err
+	}
+	log.Printf("expireAt=%v\n", jwt.ExpireAt)
+	expireAt := time.Unix(jwt.ExpireAt, 0)
+	log.Printf("expireAt=%v\n", expireAt)
+	client := &http.Client{}
+	reader := strings.NewReader("")
+	request, err := http.NewRequestWithContext(ctx, h.cfg.Method, h.cfg.URL, reader)
+	if err != nil {
+		return nil, err
+	}
+	for key, template := range h.cfg.Parameters {
+		value := strings.Replace(template, "${PSI}", req.Psi, -1)
+		value = strings.Replace(value, "${Node}", req.Node, -1)
+		request.PostForm.Add(key, value)
+	}
+	response, err := client.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	data, err = ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	oryResp := &OryResp{}
+	err = json.Unmarshal(data, oryResp)
+	if err != nil {
+		return nil, err
+	}
+	token = "bearer " + oryResp.AccessToken
+	return &proto.PluginQLightTokenManager_Response{Token: token}, nil
 }
+
+// accessToken=$$(curl -k -s -X POST -F "grant_type=client_credentials" -F "client_id=$${PSI}" -F "client_secret=foofoo" -F "scope=rpc://eth_* p2p://qlight rpc://admin_* rpc://personal_* rpc://quorumExtension_* rpc://rpc_modules psi://$${PSI}?self.eoa=0x0&node.eoa=0x0" -F "audience=Node1" https://multi-tenancy-oauth2-server:4444/oauth2/token | jq '.access_token' -r)
