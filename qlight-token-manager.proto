@@ -10,7 +10,6 @@ message PluginQLightTokenManager {
     message Request {
         string currentToken = 1;
         string psi = 2;
-        string node = 3;
     }
     message Response {
         string token = 1;

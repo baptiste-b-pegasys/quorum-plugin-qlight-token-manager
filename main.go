@@ -137,9 +137,7 @@ func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *pr
 		return nil, err
 	}
 	for key, template := range h.cfg.Parameters {
-		value := strings.Replace(template, "${PSI}", req.Psi, -1)
-		value = strings.Replace(value, "${Node}", req.Node, -1)
-		request.PostForm.Add(key, value)
+		request.PostForm.Add(key, strings.Replace(template, "${PSI}", req.Psi, -1))
 	}
 	response, err := client.Do(request)
 	if err != nil {
