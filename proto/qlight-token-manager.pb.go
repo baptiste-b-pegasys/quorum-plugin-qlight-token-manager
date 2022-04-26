@@ -20,6 +20,44 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type TokenRefresh struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *TokenRefresh) Reset() {
+	*x = TokenRefresh{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_qlight_token_manager_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TokenRefresh) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TokenRefresh) ProtoMessage() {}
+
+func (x *TokenRefresh) ProtoReflect() protoreflect.Message {
+	mi := &file_qlight_token_manager_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TokenRefresh.ProtoReflect.Descriptor instead.
+func (*TokenRefresh) Descriptor() ([]byte, []int) {
+	return file_qlight_token_manager_proto_rawDescGZIP(), []int{0}
+}
+
 type PluginQLightTokenManager struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -29,7 +67,7 @@ type PluginQLightTokenManager struct {
 func (x *PluginQLightTokenManager) Reset() {
 	*x = PluginQLightTokenManager{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_qlight_token_manager_proto_msgTypes[0]
+		mi := &file_qlight_token_manager_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -42,7 +80,7 @@ func (x *PluginQLightTokenManager) String() string {
 func (*PluginQLightTokenManager) ProtoMessage() {}
 
 func (x *PluginQLightTokenManager) ProtoReflect() protoreflect.Message {
-	mi := &file_qlight_token_manager_proto_msgTypes[0]
+	mi := &file_qlight_token_manager_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -55,10 +93,10 @@ func (x *PluginQLightTokenManager) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginQLightTokenManager.ProtoReflect.Descriptor instead.
 func (*PluginQLightTokenManager) Descriptor() ([]byte, []int) {
-	return file_qlight_token_manager_proto_rawDescGZIP(), []int{0}
+	return file_qlight_token_manager_proto_rawDescGZIP(), []int{1}
 }
 
-type PluginQLightTokenManager_Request struct {
+type TokenRefresh_Request struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -67,10 +105,109 @@ type PluginQLightTokenManager_Request struct {
 	Psi          string `protobuf:"bytes,2,opt,name=psi,proto3" json:"psi,omitempty"`
 }
 
+func (x *TokenRefresh_Request) Reset() {
+	*x = TokenRefresh_Request{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_qlight_token_manager_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TokenRefresh_Request) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TokenRefresh_Request) ProtoMessage() {}
+
+func (x *TokenRefresh_Request) ProtoReflect() protoreflect.Message {
+	mi := &file_qlight_token_manager_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TokenRefresh_Request.ProtoReflect.Descriptor instead.
+func (*TokenRefresh_Request) Descriptor() ([]byte, []int) {
+	return file_qlight_token_manager_proto_rawDescGZIP(), []int{0, 0}
+}
+
+func (x *TokenRefresh_Request) GetCurrentToken() string {
+	if x != nil {
+		return x.CurrentToken
+	}
+	return ""
+}
+
+func (x *TokenRefresh_Request) GetPsi() string {
+	if x != nil {
+		return x.Psi
+	}
+	return ""
+}
+
+type TokenRefresh_Response struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+}
+
+func (x *TokenRefresh_Response) Reset() {
+	*x = TokenRefresh_Response{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_qlight_token_manager_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TokenRefresh_Response) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TokenRefresh_Response) ProtoMessage() {}
+
+func (x *TokenRefresh_Response) ProtoReflect() protoreflect.Message {
+	mi := &file_qlight_token_manager_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TokenRefresh_Response.ProtoReflect.Descriptor instead.
+func (*TokenRefresh_Response) Descriptor() ([]byte, []int) {
+	return file_qlight_token_manager_proto_rawDescGZIP(), []int{0, 1}
+}
+
+func (x *TokenRefresh_Response) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+type PluginQLightTokenManager_Request struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
 func (x *PluginQLightTokenManager_Request) Reset() {
 	*x = PluginQLightTokenManager_Request{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_qlight_token_manager_proto_msgTypes[1]
+		mi := &file_qlight_token_manager_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -83,7 +220,7 @@ func (x *PluginQLightTokenManager_Request) String() string {
 func (*PluginQLightTokenManager_Request) ProtoMessage() {}
 
 func (x *PluginQLightTokenManager_Request) ProtoReflect() protoreflect.Message {
-	mi := &file_qlight_token_manager_proto_msgTypes[1]
+	mi := &file_qlight_token_manager_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -96,21 +233,7 @@ func (x *PluginQLightTokenManager_Request) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginQLightTokenManager_Request.ProtoReflect.Descriptor instead.
 func (*PluginQLightTokenManager_Request) Descriptor() ([]byte, []int) {
-	return file_qlight_token_manager_proto_rawDescGZIP(), []int{0, 0}
-}
-
-func (x *PluginQLightTokenManager_Request) GetCurrentToken() string {
-	if x != nil {
-		return x.CurrentToken
-	}
-	return ""
-}
-
-func (x *PluginQLightTokenManager_Request) GetPsi() string {
-	if x != nil {
-		return x.Psi
-	}
-	return ""
+	return file_qlight_token_manager_proto_rawDescGZIP(), []int{1, 0}
 }
 
 type PluginQLightTokenManager_Response struct {
@@ -118,13 +241,13 @@ type PluginQLightTokenManager_Response struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	RefreshAnticipationInMillisecond int32 `protobuf:"varint,1,opt,name=refreshAnticipationInMillisecond,proto3" json:"refreshAnticipationInMillisecond,omitempty"`
 }
 
 func (x *PluginQLightTokenManager_Response) Reset() {
 	*x = PluginQLightTokenManager_Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_qlight_token_manager_proto_msgTypes[2]
+		mi := &file_qlight_token_manager_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -137,7 +260,7 @@ func (x *PluginQLightTokenManager_Response) String() string {
 func (*PluginQLightTokenManager_Response) ProtoMessage() {}
 
 func (x *PluginQLightTokenManager_Response) ProtoReflect() protoreflect.Message {
-	mi := &file_qlight_token_manager_proto_msgTypes[2]
+	mi := &file_qlight_token_manager_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -150,14 +273,14 @@ func (x *PluginQLightTokenManager_Response) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use PluginQLightTokenManager_Response.ProtoReflect.Descriptor instead.
 func (*PluginQLightTokenManager_Response) Descriptor() ([]byte, []int) {
-	return file_qlight_token_manager_proto_rawDescGZIP(), []int{0, 1}
+	return file_qlight_token_manager_proto_rawDescGZIP(), []int{1, 1}
 }
 
-func (x *PluginQLightTokenManager_Response) GetToken() string {
+func (x *PluginQLightTokenManager_Response) GetRefreshAnticipationInMillisecond() int32 {
 	if x != nil {
-		return x.Token
+		return x.RefreshAnticipationInMillisecond
 	}
-	return ""
+	return 0
 }
 
 var File_qlight_token_manager_proto protoreflect.FileDescriptor
@@ -165,27 +288,39 @@ var File_qlight_token_manager_proto protoreflect.FileDescriptor
 var file_qlight_token_manager_proto_rawDesc = []byte{
 	0x0a, 0x1a, 0x71, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x2d, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2d, 0x6d,
 	0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x05, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x22, 0x7d, 0x0a, 0x18, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x51, 0x4c, 0x69,
-	0x67, 0x68, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x1a,
-	0x3f, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x22, 0x0a, 0x0c, 0x63, 0x75,
-	0x72, 0x72, 0x65, 0x6e, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0c, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x10,
-	0x0a, 0x03, 0x70, 0x73, 0x69, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x70, 0x73, 0x69,
-	0x1a, 0x20, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05,
-	0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b,
-	0x65, 0x6e, 0x32, 0x7f, 0x0a, 0x1a, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x51, 0x4c, 0x69, 0x67,
-	0x68, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x65, 0x72,
-	0x12, 0x61, 0x0a, 0x0c, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68,
+	0x6f, 0x74, 0x6f, 0x22, 0x71, 0x0a, 0x0c, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x66, 0x72,
+	0x65, 0x73, 0x68, 0x1a, 0x3f, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x22,
+	0x0a, 0x0c, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x54, 0x6f, 0x6b,
+	0x65, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x70, 0x73, 0x69, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x03, 0x70, 0x73, 0x69, 0x1a, 0x20, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x7d, 0x0a, 0x18, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e,
+	0x51, 0x4c, 0x69, 0x67, 0x68, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x4d, 0x61, 0x6e, 0x61, 0x67,
+	0x65, 0x72, 0x1a, 0x09, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x56, 0x0a,
+	0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4a, 0x0a, 0x20, 0x72, 0x65, 0x66,
+	0x72, 0x65, 0x73, 0x68, 0x41, 0x6e, 0x74, 0x69, 0x63, 0x69, 0x70, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x49, 0x6e, 0x4d, 0x69, 0x6c, 0x6c, 0x69, 0x73, 0x65, 0x63, 0x6f, 0x6e, 0x64, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x05, 0x52, 0x20, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x41, 0x6e, 0x74, 0x69,
+	0x63, 0x69, 0x70, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x6e, 0x4d, 0x69, 0x6c, 0x6c, 0x69, 0x73,
+	0x65, 0x63, 0x6f, 0x6e, 0x64, 0x32, 0xd6, 0x01, 0x0a, 0x1a, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e,
+	0x51, 0x4c, 0x69, 0x67, 0x68, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x66, 0x72, 0x65,
+	0x73, 0x68, 0x65, 0x72, 0x12, 0x6d, 0x0a, 0x18, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x51, 0x4c,
+	0x69, 0x67, 0x68, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72,
 	0x12, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x51,
 	0x4c, 0x69, 0x67, 0x68, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65,
 	0x72, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x2e, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x51, 0x4c, 0x69, 0x67, 0x68, 0x74, 0x54, 0x6f,
 	0x6b, 0x65, 0x6e, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x42, 0x36, 0x0a, 0x17, 0x63, 0x6f, 0x6d, 0x2e, 0x71, 0x75, 0x6f, 0x72, 0x75,
-	0x6d, 0x2e, 0x70, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x42, 0x12,
-	0x51, 0x4c, 0x69, 0x67, 0x68, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x4d, 0x61, 0x6e, 0x61, 0x67,
-	0x65, 0x72, 0x5a, 0x07, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x6e, 0x73, 0x65, 0x12, 0x49, 0x0a, 0x0c, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x66, 0x72,
+	0x65, 0x73, 0x68, 0x12, 0x1b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x54, 0x6f, 0x6b, 0x65,
+	0x6e, 0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x1c, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65,
+	0x66, 0x72, 0x65, 0x73, 0x68, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x36,
+	0x0a, 0x17, 0x63, 0x6f, 0x6d, 0x2e, 0x71, 0x75, 0x6f, 0x72, 0x75, 0x6d, 0x2e, 0x70, 0x6c, 0x75,
+	0x67, 0x69, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x42, 0x12, 0x51, 0x4c, 0x69, 0x67, 0x68,
+	0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x5a, 0x07, 0x2e,
+	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -200,17 +335,22 @@ func file_qlight_token_manager_proto_rawDescGZIP() []byte {
 	return file_qlight_token_manager_proto_rawDescData
 }
 
-var file_qlight_token_manager_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_qlight_token_manager_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_qlight_token_manager_proto_goTypes = []interface{}{
-	(*PluginQLightTokenManager)(nil),          // 0: proto.PluginQLightTokenManager
-	(*PluginQLightTokenManager_Request)(nil),  // 1: proto.PluginQLightTokenManager.Request
-	(*PluginQLightTokenManager_Response)(nil), // 2: proto.PluginQLightTokenManager.Response
+	(*TokenRefresh)(nil),                      // 0: proto.TokenRefresh
+	(*PluginQLightTokenManager)(nil),          // 1: proto.PluginQLightTokenManager
+	(*TokenRefresh_Request)(nil),              // 2: proto.TokenRefresh.Request
+	(*TokenRefresh_Response)(nil),             // 3: proto.TokenRefresh.Response
+	(*PluginQLightTokenManager_Request)(nil),  // 4: proto.PluginQLightTokenManager.Request
+	(*PluginQLightTokenManager_Response)(nil), // 5: proto.PluginQLightTokenManager.Response
 }
 var file_qlight_token_manager_proto_depIdxs = []int32{
-	1, // 0: proto.PluginQLightTokenRefresher.TokenRefresh:input_type -> proto.PluginQLightTokenManager.Request
-	2, // 1: proto.PluginQLightTokenRefresher.TokenRefresh:output_type -> proto.PluginQLightTokenManager.Response
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	4, // 0: proto.PluginQLightTokenRefresher.PluginQLightTokenManager:input_type -> proto.PluginQLightTokenManager.Request
+	2, // 1: proto.PluginQLightTokenRefresher.TokenRefresh:input_type -> proto.TokenRefresh.Request
+	5, // 2: proto.PluginQLightTokenRefresher.PluginQLightTokenManager:output_type -> proto.PluginQLightTokenManager.Response
+	3, // 3: proto.PluginQLightTokenRefresher.TokenRefresh:output_type -> proto.TokenRefresh.Response
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -223,7 +363,7 @@ func file_qlight_token_manager_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_qlight_token_manager_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PluginQLightTokenManager); i {
+			switch v := v.(*TokenRefresh); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -235,7 +375,7 @@ func file_qlight_token_manager_proto_init() {
 			}
 		}
 		file_qlight_token_manager_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PluginQLightTokenManager_Request); i {
+			switch v := v.(*PluginQLightTokenManager); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -247,6 +387,42 @@ func file_qlight_token_manager_proto_init() {
 			}
 		}
 		file_qlight_token_manager_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TokenRefresh_Request); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_qlight_token_manager_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TokenRefresh_Response); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_qlight_token_manager_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PluginQLightTokenManager_Request); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_qlight_token_manager_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*PluginQLightTokenManager_Response); i {
 			case 0:
 				return &v.state
@@ -265,7 +441,7 @@ func file_qlight_token_manager_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_qlight_token_manager_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

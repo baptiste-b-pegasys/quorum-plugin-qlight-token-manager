@@ -22,7 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PluginQLightTokenRefresherClient interface {
-	TokenRefresh(ctx context.Context, in *PluginQLightTokenManager_Request, opts ...grpc.CallOption) (*PluginQLightTokenManager_Response, error)
+	PluginQLightTokenManager(ctx context.Context, in *PluginQLightTokenManager_Request, opts ...grpc.CallOption) (*PluginQLightTokenManager_Response, error)
+	TokenRefresh(ctx context.Context, in *TokenRefresh_Request, opts ...grpc.CallOption) (*TokenRefresh_Response, error)
 }
 
 type pluginQLightTokenRefresherClient struct {
@@ -33,8 +34,17 @@ func NewPluginQLightTokenRefresherClient(cc grpc.ClientConnInterface) PluginQLig
 	return &pluginQLightTokenRefresherClient{cc}
 }
 
-func (c *pluginQLightTokenRefresherClient) TokenRefresh(ctx context.Context, in *PluginQLightTokenManager_Request, opts ...grpc.CallOption) (*PluginQLightTokenManager_Response, error) {
+func (c *pluginQLightTokenRefresherClient) PluginQLightTokenManager(ctx context.Context, in *PluginQLightTokenManager_Request, opts ...grpc.CallOption) (*PluginQLightTokenManager_Response, error) {
 	out := new(PluginQLightTokenManager_Response)
+	err := c.cc.Invoke(ctx, "/proto.PluginQLightTokenRefresher/PluginQLightTokenManager", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pluginQLightTokenRefresherClient) TokenRefresh(ctx context.Context, in *TokenRefresh_Request, opts ...grpc.CallOption) (*TokenRefresh_Response, error) {
+	out := new(TokenRefresh_Response)
 	err := c.cc.Invoke(ctx, "/proto.PluginQLightTokenRefresher/TokenRefresh", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -46,7 +56,8 @@ func (c *pluginQLightTokenRefresherClient) TokenRefresh(ctx context.Context, in 
 // All implementations must embed UnimplementedPluginQLightTokenRefresherServer
 // for forward compatibility
 type PluginQLightTokenRefresherServer interface {
-	TokenRefresh(context.Context, *PluginQLightTokenManager_Request) (*PluginQLightTokenManager_Response, error)
+	PluginQLightTokenManager(context.Context, *PluginQLightTokenManager_Request) (*PluginQLightTokenManager_Response, error)
+	TokenRefresh(context.Context, *TokenRefresh_Request) (*TokenRefresh_Response, error)
 	mustEmbedUnimplementedPluginQLightTokenRefresherServer()
 }
 
@@ -54,7 +65,10 @@ type PluginQLightTokenRefresherServer interface {
 type UnimplementedPluginQLightTokenRefresherServer struct {
 }
 
-func (UnimplementedPluginQLightTokenRefresherServer) TokenRefresh(context.Context, *PluginQLightTokenManager_Request) (*PluginQLightTokenManager_Response, error) {
+func (UnimplementedPluginQLightTokenRefresherServer) PluginQLightTokenManager(context.Context, *PluginQLightTokenManager_Request) (*PluginQLightTokenManager_Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PluginQLightTokenManager not implemented")
+}
+func (UnimplementedPluginQLightTokenRefresherServer) TokenRefresh(context.Context, *TokenRefresh_Request) (*TokenRefresh_Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TokenRefresh not implemented")
 }
 func (UnimplementedPluginQLightTokenRefresherServer) mustEmbedUnimplementedPluginQLightTokenRefresherServer() {
@@ -71,8 +85,26 @@ func RegisterPluginQLightTokenRefresherServer(s grpc.ServiceRegistrar, srv Plugi
 	s.RegisterService(&PluginQLightTokenRefresher_ServiceDesc, srv)
 }
 
-func _PluginQLightTokenRefresher_TokenRefresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PluginQLightTokenRefresher_PluginQLightTokenManager_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PluginQLightTokenManager_Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginQLightTokenRefresherServer).PluginQLightTokenManager(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.PluginQLightTokenRefresher/PluginQLightTokenManager",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginQLightTokenRefresherServer).PluginQLightTokenManager(ctx, req.(*PluginQLightTokenManager_Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PluginQLightTokenRefresher_TokenRefresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TokenRefresh_Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -84,7 +116,7 @@ func _PluginQLightTokenRefresher_TokenRefresh_Handler(srv interface{}, ctx conte
 		FullMethod: "/proto.PluginQLightTokenRefresher/TokenRefresh",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginQLightTokenRefresherServer).TokenRefresh(ctx, req.(*PluginQLightTokenManager_Request))
+		return srv.(PluginQLightTokenRefresherServer).TokenRefresh(ctx, req.(*TokenRefresh_Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,6 +128,10 @@ var PluginQLightTokenRefresher_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.PluginQLightTokenRefresher",
 	HandlerType: (*PluginQLightTokenRefresherServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "PluginQLightTokenManager",
+			Handler:    _PluginQLightTokenRefresher_PluginQLightTokenManager_Handler,
+		},
 		{
 			MethodName: "TokenRefresh",
 			Handler:    _PluginQLightTokenRefresher_TokenRefresh_Handler,

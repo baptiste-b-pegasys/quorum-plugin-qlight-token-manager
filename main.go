@@ -77,8 +77,9 @@ func (h *QlightTokenManagerPluginImpl) GRPCClient(context.Context, *plugin.GRPCB
 }
 
 type config struct {
-	URL, Method string
-	Parameters  map[string]string
+	URL, Method                      string
+	RefreshAnticipationInMillisecond int32
+	Parameters                       map[string]string
 }
 
 func (c *config) validate() error {
@@ -113,7 +114,11 @@ type OryResp struct {
 	ErrorDescription string `json:"error_description,omitempty"`
 }
 
-func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *proto.PluginQLightTokenManager_Request) (*proto.PluginQLightTokenManager_Response, error) {
+func (h *QlightTokenManagerPluginImpl) PluginQLightTokenManager(ctx context.Context, req *proto.PluginQLightTokenManager_Request) (*proto.PluginQLightTokenManager_Response, error) {
+	return &proto.PluginQLightTokenManager_Response{RefreshAnticipationInMillisecond: h.cfg.RefreshAnticipationInMillisecond}, nil
+}
+
+func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *proto.TokenRefresh_Request) (*proto.TokenRefresh_Response, error) {
 	log.Printf("refresh token %s\n", req.GetCurrentToken())
 	token := req.GetCurrentToken()
 	idx := strings.Index(token, " ")
@@ -138,7 +143,7 @@ func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *pr
 	log.Printf("expireAt=%v\n", expireAt)
 	if time.Since(expireAt) < -time.Minute {
 		log.Println("return current token")
-		return &proto.PluginQLightTokenManager_Response{Token: req.GetCurrentToken()}, nil
+		return &proto.TokenRefresh_Response{Token: req.GetCurrentToken()}, nil
 	}
 	transCfg := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates
@@ -185,7 +190,7 @@ func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *pr
 		return nil, fmt.Errorf("%s: %s", oryResp.Error, oryResp.ErrorDescription)
 	}
 	token = "bearer " + oryResp.AccessToken
-	return &proto.PluginQLightTokenManager_Response{Token: token}, nil
+	return &proto.TokenRefresh_Response{Token: token}, nil
 }
 
 // accessToken=$$(curl -k -s -X POST -F "grant_type=client_credentials" -F "client_id=$${PSI}" -F "client_secret=foofoo" -F "scope=rpc://eth_* p2p://qlight rpc://admin_* rpc://personal_* rpc://quorumExtension_* rpc://rpc_modules psi://$${PSI}?self.eoa=0x0&node.eoa=0x0" -F "audience=Node1" https://multi-tenancy-oauth2-server:4444/oauth2/token | jq '.access_token' -r)
