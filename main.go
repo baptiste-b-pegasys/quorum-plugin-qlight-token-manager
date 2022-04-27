@@ -115,7 +115,11 @@ type OryResp struct {
 }
 
 func (h *QlightTokenManagerPluginImpl) PluginQLightTokenManager(ctx context.Context, req *proto.PluginQLightTokenManager_Request) (*proto.PluginQLightTokenManager_Response, error) {
-	return &proto.PluginQLightTokenManager_Response{RefreshAnticipationInMillisecond: h.cfg.RefreshAnticipationInMillisecond}, nil
+	anticipation := int32(0)
+	if h.cfg.RefreshAnticipationInMillisecond > 0 {
+		anticipation = h.cfg.RefreshAnticipationInMillisecond
+	}
+	return &proto.PluginQLightTokenManager_Response{RefreshAnticipationInMillisecond: anticipation}, nil
 }
 
 func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *proto.TokenRefresh_Request) (*proto.TokenRefresh_Response, error) {
@@ -141,7 +145,7 @@ func (h *QlightTokenManagerPluginImpl) TokenRefresh(ctx context.Context, req *pr
 	log.Printf("expireAt=%v\n", jwt.ExpireAt)
 	expireAt := time.Unix(jwt.ExpireAt, 0)
 	log.Printf("expireAt=%v\n", expireAt)
-	if time.Since(expireAt) < -time.Minute {
+	if time.Since(expireAt) < -time.Duration(h.cfg.RefreshAnticipationInMillisecond)*time.Millisecond {
 		log.Println("return current token")
 		return &proto.TokenRefresh_Response{Token: req.GetCurrentToken()}, nil
 	}
